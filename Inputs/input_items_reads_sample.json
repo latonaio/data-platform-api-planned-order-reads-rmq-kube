@@ -198,6 +198,6 @@
 		]
 	},
 	"api_schema": "DPFMProductionOrderReads",
-	"accepter": ["Header"],
+	"accepter": ["Items"],
 	"deleted": false
 }

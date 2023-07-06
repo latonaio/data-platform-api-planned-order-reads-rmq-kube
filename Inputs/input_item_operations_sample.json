@@ -74,7 +74,7 @@
 		"ProductionOrderHeaderText": "",
 		"Item": [
 			{
-				"ProductionOrderItem": null,
+				"ProductionOrderItem": 1,
 				"CreationDate": "",
 				"LastChangeDate": "",
 				"ItemIsReleased": null,
@@ -171,33 +171,27 @@
 						]
 					}
 				],
-				"ItemOperation": [
+				"ItemOperations": [
 					{
-						"Operations": null,
 						"OperationsItem": null,
 						"OperationsText": "",
-						"SequenceText": "",
-						"OperationIsPartiallyConfirmed": null,
-						"OperationIsConfirmed": null,
-						"OperationIsClosed": null,
-						"OperationErlstSchedldExecStrtDte": "",
+						"WorkCenter": "",
+						"OperationPlannedTotalQuantity": null,
+						"OperationTotalConfirmedYieldQuantity": null,
+						"OperationErlstSchedldExecStrtDte": null,
 						"OperationErlstSchedldExecStrtTme": "",
 						"OperationErlstSchedldExecEndDate": "",
 						"OperationErlstSchedldExecEndTme": "",
 						"OperationActualExecutionStartDate": "",
 						"OperationActualExecutionStartTime": "",
 						"OperationActualExecutionEndDate": "",
-						"OperationActualExecutionEndTime": "",
-						"ErlstSchedldExecDurnInWorkdays": "",
-						"OperationActualExecutionDays": "",
-						"OperationPlannedTotalQuantity": null,
-						"OperationTotalConfirmedYieldQuantity": null
+						"OperationActualExecutionEndTime": ""
 					}
 				]
 			}
 		]
 	},
 	"api_schema": "DPFMProductionOrderReads",
-	"accepter": ["Header"],
+	"accepter": ["ItemOperations"],
 	"deleted": false
 }

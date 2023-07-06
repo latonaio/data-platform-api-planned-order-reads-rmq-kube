@@ -1,180 +1,391 @@
 package dpfm_api_output_formatter
 
 import (
-	"data-platform-api-planned-order-reads-rmq-kube/DPFM_API_Caller/requests"
-	api_input_reader "data-platform-api-planned-order-reads-rmq-kube/DPFM_API_Input_Reader"
 	"database/sql"
 	"fmt"
 )
 
-func ConvertToHeader(sdc *api_input_reader.SDC, rows *sql.Rows) (*Header, error) {
-	pm := &requests.Header{}
-
-	for i := 0; true; i++ {
-		if !rows.Next() {
-			if i == 0 {
-				return nil, fmt.Errorf("DBに対象のレコードが存在しません。")
-			} else {
-				break
-			}
-		}
+func ConvertToHeader(rows *sql.Rows) (*[]Header, error) {
+	defer rows.Close()
+	header := make([]Header, 0)
+	i := 0
+	for rows.Next() {
+		i++
+		pm := Header{}
 		err := rows.Scan(
 			&pm.PlannedOrder,
+			&pm.SupplyChainRelationshipID,
+			&pm.SupplyChainRelationshipDeliveryID,
+			&pm.SupplyChainRelationshipDeliveryPlantID,
+			&pm.SupplyChainRelationshipProductionPlantID,
 			&pm.PlannedOrderType,
 			&pm.Product,
-			&pm.DeliverFromParty,
-			&pm.DeliverToParty,
-			&pm.IssuingPlant,
-			&pm.IssuingPlantStorageLocation,
-			&pm.ReceivingPlant,
-			&pm.ReceivingPlantStorageLocation,
-			&pm.ProductionPlantBusinessPartner,
-			&pm.ProductionPlant,
-			&pm.ProductionPlantStorageLocation,
+			&pm.Buyer,
+			&pm.Seller,
+			&pm.DestinationDeliverToParty,
+			&pm.DestinationDeliverToPlant,
+			&pm.DestinationDeliverToPlantStorageLocation,
+			&pm.DepartureDeliverFromParty,
+			&pm.DepartureDeliverFromPlant,
+			&pm.DepartureDeliverFromPlantStorageLocation,
+			&pm.OwnerProductionPlantBusinessPartner,
+			&pm.OwnerProductionPlant,
+			&pm.OwnerProductionPlantStorageLocation,
+			&pm.ProductBaseUnit,
 			&pm.MRPArea,
-			&pm.BaseUnit,
+			&pm.MRPController,
+			&pm.ProductionVersion,
+			&pm.BillOfMaterial,
+			&pm.Operations,
 			&pm.PlannedOrderQuantityInBaseUnit,
+			&pm.PlannedOrderQuantityInDestinationDeliveryUnit,
+			&pm.PlannedOrderQuantityInDepartureDeliveryUnit,
+			&pm.PlannedOrderQuantityInDestinationProductionUnit,
+			&pm.PlannedOrderQuantityInDepartureProductionUnit,
+			&pm.PlannedOrderDestinationDeliveryUnit,
+			&pm.PlannedOrderDepartureDeliveryUnit,
+			&pm.PlannedOrderDestinationProductionUnit,
+			&pm.PlannedOrderDepartureProductionUnit,
 			&pm.PlannedOrderPlannedScrapQtyInBaseUnit,
-			&pm.PlannedOrderIssuingUnit,
-			&pm.PlannedOrderReceivingUnit,
-			&pm.PlannedOrderIssuingQuantity,
-			&pm.PlannedOrderReceivingQuantity,
 			&pm.PlannedOrderPlannedStartDate,
 			&pm.PlannedOrderPlannedStartTime,
 			&pm.PlannedOrderPlannedEndDate,
 			&pm.PlannedOrderPlannedEndTime,
-			&pm.LastChangeDateTime,
 			&pm.OrderID,
 			&pm.OrderItem,
-			&pm.Buyer,
-			&pm.Seller,
-			&pm.Project,
+			&pm.Projuct,
+			&pm.WBSElement,
 			&pm.Reservation,
+			&pm.ReservationItem,
 			&pm.PlannedOrderLongText,
-			&pm.MRPController,
-			&pm.PlannedOrderIsFixed,
-			&pm.PlannedOrderBOMFixed,
 			&pm.LastScheduledDate,
 			&pm.ScheduledBasicEndDate,
 			&pm.ScheduledBasicEndTime,
 			&pm.ScheduledBasicStartDate,
 			&pm.ScheduledBasicStartTime,
 			&pm.SchedulingType,
+			&pm.PlannedOrderIsReleased,
+			&pm.CreationDate,
+			&pm.CreationTime,
+			&pm.LastChangeDate,
+			&pm.LastChangeTime,
+			&pm.IsMarkedForDeletion,
 		)
 		if err != nil {
 			fmt.Printf("err = %+v \n", err)
-			return nil, err
+			return &header, err
 		}
+		header = append(header, pm)
 	}
-	data := pm
+	if i == 0 {
+		fmt.Printf("DBに対象のレコードが存在しません。")
+		return &header, nil
+	}
 
-	header := &Header{
-		PlannedOrder:                          data.PlannedOrder,
-		PlannedOrderType:                      data.PlannedOrderType,
-		Product:                               data.Product,
-		DeliverFromParty:                      data.DeliverFromParty,
-		DeliverToParty:                        data.DeliverToParty,
-		IssuingPlant:                          data.IssuingPlant,
-		IssuingPlantStorageLocation:           data.IssuingPlantStorageLocation,
-		ReceivingPlant:                        data.ReceivingPlant,
-		ReceivingPlantStorageLocation:         data.ReceivingPlantStorageLocation,
-		ProductionPlantBusinessPartner:        data.ProductionPlantBusinessPartner,
-		ProductionPlant:                       data.ProductionPlant,
-		ProductionPlantStorageLocation:        data.ProductionPlantStorageLocation,
-		MRPArea:                               data.MRPArea,
-		BaseUnit:                              data.BaseUnit,
-		PlannedOrderQuantityInBaseUnit:        data.PlannedOrderQuantityInBaseUnit,
-		PlannedOrderPlannedScrapQtyInBaseUnit: data.PlannedOrderPlannedScrapQtyInBaseUnit,
-		PlannedOrderIssuingUnit:               data.PlannedOrderIssuingUnit,
-		PlannedOrderReceivingUnit:             data.PlannedOrderReceivingUnit,
-		PlannedOrderIssuingQuantity:           data.PlannedOrderIssuingQuantity,
-		PlannedOrderReceivingQuantity:         data.PlannedOrderReceivingQuantity,
-		PlannedOrderPlannedStartDate:          data.PlannedOrderPlannedStartDate,
-		PlannedOrderPlannedStartTime:          data.PlannedOrderPlannedStartTime,
-		PlannedOrderPlannedEndDate:            data.PlannedOrderPlannedEndDate,
-		PlannedOrderPlannedEndTime:            data.PlannedOrderPlannedEndTime,
-		LastChangeDateTime:                    data.LastChangeDateTime,
-		OrderID:                               data.OrderID,
-		OrderItem:                             data.OrderItem,
-		Buyer:                                 data.Buyer,
-		Seller:                                data.Seller,
-		Project:                               data.Project,
-		Reservation:                           data.Reservation,
-		PlannedOrderLongText:                  data.PlannedOrderLongText,
-		MRPController:                         data.MRPController,
-		PlannedOrderIsFixed:                   data.PlannedOrderIsFixed,
-		PlannedOrderBOMFixed:                  data.PlannedOrderBOMFixed,
-		LastScheduledDate:                     data.LastScheduledDate,
-		ScheduledBasicEndDate:                 data.ScheduledBasicEndDate,
-		ScheduledBasicEndTime:                 data.ScheduledBasicEndTime,
-		ScheduledBasicStartDate:               data.ScheduledBasicStartDate,
-		ScheduledBasicStartTime:               data.ScheduledBasicStartTime,
-		SchedulingType:                        data.SchedulingType,
-	}
-	return header, nil
+	return &header, nil
 }
 
-func ConvertToComponent(sdc *api_input_reader.SDC, rows *sql.Rows) (*Component, error) {
-	pm := &requests.Component{}
-
-	for i := 0; true; i++ {
-		if !rows.Next() {
-			if i == 0 {
-				return nil, fmt.Errorf("DBに対象のレコードが存在しません。")
-			} else {
-				break
-			}
-		}
+func ConvertToItem(rows *sql.Rows) (*[]Item, error) {
+	defer rows.Close()
+	item := make([]Item, 0)
+	i := 0
+	for rows.Next() {
+		i++
+		pm := Item{}
 		err := rows.Scan(
 			&pm.PlannedOrder,
-			&pm.BOMItem,
-			&pm.BOMItemDescription,
-			&pm.BillOfMaterialCategory,
-			&pm.BillOfMaterialItemNumber,
-			&pm.BillOfMaterialInternalID,
+			&pm.PlannedOrderItem,
+			&pm.PrecedingProductionOrderItem,
+			&pm.FollowingProductionOrderItem,
+			&pm.SupplyChainRelationshipID,
+			&pm.SupplyChainRelationshipDeliveryID,
+			&pm.SupplyChainRelationshipDeliveryPlantID,
+			&pm.SupplyChainRelationshipProductionPlantID,
+			&pm.SupplyChainRelationshipStockConfPlantID,
+			&pm.PlannedOrderType,
+			&pm.Product,
+			&pm.Buyer,
+			&pm.DeliverToParty,
+			&pm.DeliverToPlant,
+			&pm.DeliverToPlantStorageLocation,
+			&pm.DeliverFromParty,
+			&pm.DeliverFromPlant,
+			&pm.DeliverFromPlantStorageLocation,
+			&pm.ProductionPlantBusinessPartner,
+			&pm.ProductionPlant,
+			&pm.ProductionPlantStorageLocation,
+			&pm.ProductBaseUnit,
+			&pm.ProductDeliveryUnit,
+			&pm.ProductProductionUnit,
+			&pm.MRPArea,
+			&pm.MRPController,
+			&pm.ProductionVersion,
+			&pm.ProductionVersionItem,
+			&pm.StockConfirmationBusinessPartner,
+			&pm.StockConfirmationPlant,
+			&pm.StockConfirmationPlantStorageLocation,
+			&pm.BillOfMaterial,
+			&pm.Operations,
+			&pm.PlannedOrderQuantityInBaseUnit,
+			&pm.PlannedOrderQuantityInDeliveryUnit,
+			&pm.PlannedOrderQuantityInProductionUnit,
+			&pm.PlannedOrderPlannedScrapQtyInBaseUnit,
+			&pm.PlannedOrderMinimumLotSizeQuantity,
+			&pm.PlannedOrderStandardLotSizeQuantity,
+			&pm.PlannedOrderMaximumLotSizeQuantity,
+			&pm.PlannedOrderLotSizeRoundingQuantity,
+			&pm.PlannedOrderLotSizeIsFixed,
+			&pm.PlannedOrderPlannedStartDate,
+			&pm.PlannedOrderPlannedStartTime,
+			&pm.PlannedOrderPlannedEndDate,
+			&pm.PlannedOrderPlannedEndTime,
+			&pm.OrderID,
+			&pm.OrderItem,
+			&pm.Project,
+			&pm.WBSElement,
 			&pm.Reservation,
 			&pm.ReservationItem,
-			&pm.ComponentProduct,
-			&pm.ComponentProductRequirementDate,
-			&pm.ComponentProductRequiredQuantity,
-			&pm.BaseUnit,
-			&pm.WithdrawnQuantity,
-			&pm.ComponentScrapInPercent,
-			&pm.QuantityIsFixed,
-			&pm.ComponentWithdrawnPlantBusinessPartner,
-			&pm.ComponentWithdrawnPlant,
-			&pm.ComponentWithdrawnStorageLocation,
-			&pm.MRPController,
-			&pm.LastChangeDateTime,
+			&pm.PlannedOrderLongText,
+			&pm.LastScheduledDate,
+			&pm.ScheduledBasicEndDate,
+			&pm.ScheduledBasicEndTime,
+			&pm.ScheduledBasicStartDate,
+			&pm.ScheduledBasicStartTime,
+			&pm.SchedulingType,
+			&pm.PlannedOrderIsReleased,
+			&pm.CreationDate,
+			&pm.CreationTime,
+			&pm.LastChangeDate,
+			&pm.LastChangeTime,
+			&pm.IsMarkedForDeletion,
 		)
 		if err != nil {
 			fmt.Printf("err = %+v \n", err)
-			return nil, err
+			return &item, err
 		}
+		item = append(item, pm)
 	}
-	data := pm
+	if i == 0 {
+		fmt.Printf("DBに対象のレコードが存在しません。")
+		return &item, nil
+	}
 
-	component := &Component{
-		PlannedOrder:                           data.PlannedOrder,
-		BOMItem:                                data.BOMItem,
-		BOMItemDescription:                     data.BOMItemDescription,
-		BillOfMaterialCategory:                 data.BillOfMaterialCategory,
-		BillOfMaterialItemNumber:               data.BillOfMaterialItemNumber,
-		BillOfMaterialInternalID:               data.BillOfMaterialInternalID,
-		Reservation:                            data.Reservation,
-		ReservationItem:                        data.ReservationItem,
-		ComponentProduct:                       data.ComponentProduct,
-		ComponentProductRequirementDate:        data.ComponentProductRequirementDate,
-		ComponentProductRequiredQuantity:       data.ComponentProductRequiredQuantity,
-		BaseUnit:                               data.BaseUnit,
-		WithdrawnQuantity:                      data.WithdrawnQuantity,
-		ComponentScrapInPercent:                data.ComponentScrapInPercent,
-		QuantityIsFixed:                        data.QuantityIsFixed,
-		ComponentWithdrawnPlantBusinessPartner: data.ComponentWithdrawnPlantBusinessPartner,
-		ComponentWithdrawnPlant:                data.ComponentWithdrawnPlant,
-		ComponentWithdrawnStorageLocation:      data.ComponentWithdrawnStorageLocation,
-		MRPController:                          data.MRPController,
-		LastChangeDateTime:                     data.LastChangeDateTime,
+	return &item, nil
+}
+
+func ConvertToItemComponent(rows *sql.Rows) (*[]ItemComponent, error) {
+	defer rows.Close()
+	itemComponent := make([]ItemComponent, 0)
+	i := 0
+	for rows.Next() {
+		i++
+		pm := ItemComponent{}
+		err := rows.Scan(
+			&pm.PlannedOrder,
+			&pm.PlannedOrderItem,
+			&pm.BillOfMaterial,
+			&pm.BillOfMaterialItem,
+			&pm.SupplyChainRelationshipID,
+			&pm.SupplyChainRelationshipDeliveryID,
+			&pm.SupplyChainRelationshipDeliveryPlantID,
+			&pm.SupplyChainRelationshipStockConfPlantID,
+			&pm.ProductionPlantBusinessPartner,
+			&pm.ProductionPlant,
+			&pm.ComponentProduct,
+			&pm.ComponentProductBuyer,
+			&pm.ComponentProductSeller,
+			&pm.ComponentProductDeliverToParty,
+			&pm.ComponentProductDeliverToPlant,
+			&pm.ComponentProductDeliverFromParty,
+			&pm.ComponentProductDeliverFromPlant,
+			&pm.ComponentProductRequirementDate,
+			&pm.ComponentProductRequirementTime,
+			&pm.ComponentProductRequiredQuantityInBaseUnit,
+			&pm.ComponentProductRequiredQuantityInDeliveryUnit,
+			&pm.ComponentProductPlannedScrapInPercent,
+			&pm.ComponentProductBaseUnit,
+			&pm.ComponentProductDeliveryUnit,
+			&pm.ComponentProductIsMarkedForBackflush,
+			&pm.BillOfMaterialItemText,
+			&pm.StockConfirmationBusinessPartner,
+			&pm.StockConfirmationPlant,
+			&pm.StockConfirmationPlantStorageLocation,
+			&pm.MRPArea,
+			&pm.MRPController,
+			&pm.ProductionVersion,
+			&pm.ProductionVersionItem,
+			&pm.PlannedOrderIsReleased,
+			&pm.CreationDate,
+			&pm.CreationTime,
+			&pm.LastChangeDate,
+			&pm.LastChangeTime,
+			&pm.IsMarkedForDeletion,
+		)
+		if err != nil {
+			fmt.Printf("err = %+v \n", err)
+			return &itemComponent, err
+		}
+		itemComponent = append(itemComponent, pm)
 	}
-	return component, nil
+	if i == 0 {
+		fmt.Printf("DBに対象のレコードが存在しません。")
+		return &itemComponent, nil
+	}
+
+	return &itemComponent, nil
+}
+
+func ConvertToItemOperation(rows *sql.Rows) (*[]ItemOperation, error) {
+	defer rows.Close()
+	itemOperation := make([]ItemOperation, 0)
+	i := 0
+	for rows.Next() {
+		i++
+		pm := ItemOperation{}
+		err := rows.Scan(
+			&pm.PlannedOrder,
+			&pm.PlannedOrderItem,
+			&pm.Operations,
+			&pm.OperationsItem,
+			&pm.OperationID,
+			&pm.SupplyChainRelationshipID,
+			&pm.SupplyChainRelationshipDeliveryID,
+			&pm.SupplyChainRelationshipDeliveryPlantID,
+			&pm.SupplyChainRelationshipProductionPlantID,
+			&pm.Product,
+			&pm.Buyer,
+			&pm.Seller,
+			&pm.DeliverToParty,
+			&pm.DeliverToPlant,
+			&pm.DeliverFromParty,
+			&pm.DeliverFromPlant,
+			&pm.ProductionPlantBusinessPartner,
+			&pm.ProductionPlant,
+			&pm.MRPArea,
+			&pm.MRPController,
+			&pm.ProductionVersion,
+			&pm.ProductionVersionItem,
+			&pm.Sequence,
+			&pm.SequenceText,
+			&pm.OperationText,
+			&pm.ProductBaseUnit,
+			&pm.ProductProductionUnit,
+			&pm.ProductOperationUnit,
+			&pm.ProductDeliveryUnit,
+			&pm.StandardLotSizeQuantity,
+			&pm.MinimumLotSizeQuantity,
+			&pm.MaximumLotSizeQuantity,
+			&pm.OperationPlannedQuantityInBaseUnit,
+			&pm.OperationPlannedQuantityInProductionUnit,
+			&pm.OperationPlannedQuantityInOperationUnit,
+			&pm.OperationPlannedQuantityInDeliveryUnit,
+			&pm.OperationPlannedScrapInPercent,
+			&pm.ResponsiblePlannerGroup,
+			&pm.PlainLongText,
+			&pm.WorkCenter,
+			&pm.CapacityCategoryCode,
+			&pm.OperationCostingRelevancyType,
+			&pm.OperationSetupType,
+			&pm.OperationSetupGroupCategory,
+			&pm.OperationSetupGroup,
+			&pm.MaximumWaitDuration,
+			&pm.StandardWaitDuration,
+			&pm.MinimumWaitDuration,
+			&pm.WaitDurationUnit,
+			&pm.MaximumQueDuration,
+			&pm.StandardQueueDuration,
+			&pm.MinimumQueueDuration,
+			&pm.QueDurationUnit,
+			&pm.MaximumMoveDuration,
+			&pm.StandardMoveDuration,
+			&pm.MinimumMoveDuration,
+			&pm.MoveDurationUnit,
+			&pm.StandardDeliveryDuration,
+			&pm.StandardDeliveryDurationUnit,
+			&pm.CostElement,
+			&pm.PlannedOrderIsReleased,
+			&pm.CreationDate,
+			&pm.CreationTime,
+			&pm.LastChangeDate,
+			&pm.LastChangeTime,
+			&pm.IsMarkedForDeletion,
+		)
+		if err != nil {
+			fmt.Printf("err = %+v \n", err)
+			return &itemOperation, err
+		}
+		itemOperation = append(itemOperation, pm)
+	}
+	if i == 0 {
+		fmt.Printf("DBに対象のレコードが存在しません。")
+		return &itemOperation, nil
+	}
+
+	return &itemOperation, nil
+}
+
+func ConvertToItemOperationComponent(rows *sql.Rows) (*[]ItemOperationComponent, error) {
+	defer rows.Close()
+	itemOperationComponent := make([]ItemOperationComponent, 0)
+	i := 0
+	for rows.Next() {
+		i++
+		pm := ItemOperationComponent{}
+		err := rows.Scan(
+			&pm.PlannedOrder,
+			&pm.PlannedOrderItem,
+			&pm.Operations,
+			&pm.OperationsItem,
+			&pm.OperationID,
+			&pm.BillOfMaterial,
+			&pm.BillOfMaterialItem,
+			&pm.SupplyChainRelationshipID,
+			&pm.SupplyChainRelationshipDeliveryID,
+			&pm.SupplyChainRelationshipDeliveryPlantID,
+			&pm.ProductionPlantBusinessPartner,
+			&pm.ProductionPlant,
+			&pm.ComponentProduct,
+			&pm.ComponentProductBuyer,
+			&pm.ComponentProductSeller,
+			&pm.ComponentProductDeliverToParty,
+			&pm.ComponentProductDeliverToPlant,
+			&pm.ComponentProductDeliverFromParty,
+			&pm.ComponentProductDeliverFromPlant,
+			&pm.ComponentProductDeliverToPartyInOperation,
+			&pm.ComponentProductDeliverToPlantInOperation,
+			&pm.ComponentProductDeliverFromPartyInOperation,
+			&pm.ComponentProductDeliverFromPlantInOperation,
+			&pm.ComponentProductRequirementDateInOperation,
+			&pm.ComponentProductRequirementTimeInOperation,
+			&pm.ComponentProductPlannedQuantityInBaseUnitInOperation,
+			&pm.ComponentProductPlannedQuantityInDeliveryUnitInOperation,
+			&pm.ComponentProductPlannedScrapInPercentInOperation,
+			&pm.ComponentProductBaseUnit,
+			&pm.ComponentProductDeliveryUnit,
+			&pm.ComponentProductIsMarkedForBackflush,
+			&pm.MRPArea,
+			&pm.MRPController,
+			&pm.ProductionVersion,
+			&pm.ProductionVersionItem,
+			&pm.ComponentProductReservation,
+			&pm.ComponentProductReservationItem,
+			&pm.PlannedOrderIsReleased,
+			&pm.CreationDate,
+			&pm.CreationTime,
+			&pm.LastChangeDate,
+			&pm.LastChangeTime,
+			&pm.IsMarkedForDeletion,
+		)
+		if err != nil {
+			fmt.Printf("err = %+v \n", err)
+			return &itemOperationComponent, err
+		}
+		itemOperationComponent = append(itemOperationComponent, pm)
+	}
+	if i == 0 {
+		fmt.Printf("DBに対象のレコードが存在しません。")
+		return &itemOperationComponent, nil
+	}
+
+	return &itemOperationComponent, nil
 }

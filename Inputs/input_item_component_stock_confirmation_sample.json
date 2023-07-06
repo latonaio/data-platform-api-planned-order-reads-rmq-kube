@@ -74,7 +74,7 @@
 		"ProductionOrderHeaderText": "",
 		"Item": [
 			{
-				"ProductionOrderItem": null,
+				"ProductionOrderItem": 1,
 				"CreationDate": "",
 				"LastChangeDate": "",
 				"ItemIsReleased": null,
@@ -119,10 +119,10 @@
 				"ProductionOrderItemText": "",
 				"ItemComponent": [
 					{
-						"Operations": null,
-						"OperationsItem": null,
-						"BillOfMaterial": null,
-						"BillOfMaterialItem": null,
+						"Operations": 0,
+						"OperationsItem": 0,
+						"BillOfMaterial": 0,
+						"BillOfMaterialItem": 0,
 						"Reservation": null,
 						"ReservationItem": null,
 						"ComponentProduct": "",
@@ -198,6 +198,6 @@
 		]
 	},
 	"api_schema": "DPFMProductionOrderReads",
-	"accepter": ["Header"],
+	"accepter": ["ItemComponentStockConfirmation"],
 	"deleted": false
 }

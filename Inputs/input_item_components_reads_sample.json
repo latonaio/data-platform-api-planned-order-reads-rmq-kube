@@ -74,7 +74,7 @@
 		"ProductionOrderHeaderText": "",
 		"Item": [
 			{
-				"ProductionOrderItem": null,
+				"ProductionOrderItem": 1,
 				"CreationDate": "",
 				"LastChangeDate": "",
 				"ItemIsReleased": null,
@@ -152,7 +152,7 @@
 						"WithdrawnQuantity": null,
 						"ConfirmedAvailableQuantity": null,
 						"ProductCompOriginalQuantity": null,
-						"IsMarkedForDeletion": null,
+						"IsMarkedForDeletion": false,
 						"ItemComponentStockConfirmation": [
 							{
 								"InventoryStockType": "",
@@ -198,6 +198,6 @@
 		]
 	},
 	"api_schema": "DPFMProductionOrderReads",
-	"accepter": ["Header"],
+	"accepter": ["ItemComponents"],
 	"deleted": false
 }

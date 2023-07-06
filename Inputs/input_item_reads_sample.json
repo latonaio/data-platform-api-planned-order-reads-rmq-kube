@@ -74,7 +74,7 @@
 		"ProductionOrderHeaderText": "",
 		"Item": [
 			{
-				"ProductionOrderItem": null,
+				"ProductionOrderItem": 1,
 				"CreationDate": "",
 				"LastChangeDate": "",
 				"ItemIsReleased": null,
@@ -198,6 +198,6 @@
 		]
 	},
 	"api_schema": "DPFMProductionOrderReads",
-	"accepter": ["Header"],
+	"accepter": ["Item"],
 	"deleted": false
 }

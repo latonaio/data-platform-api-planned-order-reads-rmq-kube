@@ -2,28 +2,29 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    run: data-platform-api-planned-order-reads-rmq-kube
-  name: data-platform-api-planned-order-reads-rmq-kube
+    run: data-platform-api-production-order-reads-rmq-kube
+  name: data-platform-api-production-order-reads-rmq-kube
 spec:
   replicas: 1
   selector:
     matchLabels:
-      run: data-platform-api-planned-order-reads-rmq-kube
-      app: PLANNED_ORDER
+      run: data-platform-api-production-order-reads-rmq-kube
+      app: ORDERS
   template:
     metadata:
       labels:
-        run: data-platform-api-planned-order-reads-rmq-kube
-        app: PLANNED_ORDER
+        run: data-platform-api-production-order-reads-rmq-kube
+        app: ORDERS
     spec:
-      hostname: data-platform-api-planned-order-reads-rmq-kube
+      nodeName: worker
+      hostname: data-platform-api-production-order-reads-rmq-kube
       containers:
-        - name: data-platform-api-planned-order-reads-rmq-kube
-          image: latonaio/data-platform-api-planned-order-reads-rmq-kube
+        - name: data-platform-api-production-order-reads-rmq-kube
+          image: latonaio/data-platform-api-production-order-reads-rmq-kube
           imagePullPolicy: Always
           env:
             - name: "RMQ_QUEUE_FROM"
-              value: "data-platform-api-planned-order-reads-queue"
+              value: "data-platform-api-production-order-reads-queue"
             - name: "RMQ_QUEUE_TO_SQL"
               value: ""
             - name: "RMQ_QUEUE_TO_EX_CONF"
@@ -33,7 +34,7 @@ spec:
             - name: "RMQ_QUEUE_TO_ITEMS_SUB_FUNC"
               value: ""
             - name: "RMQ_SESSION_CONTROL_QUEUE"
-              value: "data-platform-api-planned-order-reads-session-control-queue"
+              value: "data-platform-api-production-order-reads-session-control-queue"
             - name: "DB_NAME"
               value: "DataPlatformMastersAndTransactionsMysqlKube"
           envFrom:
@@ -46,15 +47,15 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    run: data-platform-api-planned-order-reads-rmq-kube
-  name: data-platform-api-planned-order-reads-rmq-kube
+    run: data-platform-api-production-order-reads-rmq-kube
+  name: data-platform-api-production-order-reads-rmq-kube
 spec:
   selector:
-    run: data-platform-api-planned-order-reads-rmq-kube
+    run: data-platform-api-production-order-reads-rmq-kube
   type: NodePort
   ports:
     - name: api
       port: 8080
       protocol: TCP
       targetPort: 8080
-      nodePort: 30777
+      nodePort: 30740

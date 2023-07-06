@@ -37,18 +37,18 @@
 		"ReleaseProductionOrder": true
 	},
 	"ProductionOrder": {
-		"ProductionOrder": 240000001,
-		"ProductionOrderType": "",
+		"ProductionOrder": null,
+		"ProductionOrderType": "PP",
 		"CreationDate": "",
 		"LastChangeDate": "",
-		"HeaderIsReleased": null,
+		"HeaderIsReleased": true,
 		"HeaderIsPartiallyConfirmed": null,
 		"HeaderIsConfirmed": null,
 		"HeaderIsLocked": null,
-		"HeaderIsMarkedForDeletion": null,
+		"HeaderIsMarkedForDeletion": false,
 		"Product": "",
 		"OwnerProductionPlant": "",
-		"OwnerProductionPlantBusinessPartner": null,
+		"OwnerProductionPlantBusinessPartner": 201,
 		"OwnerProductionPlantStorageLocation": "",
 		"MRPArea": "",
 		"MRPController": "",
@@ -198,6 +198,6 @@
 		]
 	},
 	"api_schema": "DPFMProductionOrderReads",
-	"accepter": ["Header"],
+	"accepter": ["Headers"],
 	"deleted": false
 }
