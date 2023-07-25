@@ -283,7 +283,7 @@ func ConvertToItemOperation(rows *sql.Rows) (*[]ItemOperation, error) {
 			&pm.ResponsiblePlannerGroup,
 			&pm.PlainLongText,
 			&pm.WorkCenter,
-			&pm.CapacityCategoryCode,
+			&pm.CapacityCategory,
 			&pm.OperationCostingRelevancyType,
 			&pm.OperationSetupType,
 			&pm.OperationSetupGroupCategory,

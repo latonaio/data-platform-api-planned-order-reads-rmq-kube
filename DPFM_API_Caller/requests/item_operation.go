@@ -41,7 +41,7 @@ type ItemOperation struct {
 	ResponsiblePlannerGroup                  *string  `json:"ResponsiblePlannerGroup"`
 	PlainLongText                            *string  `json:"PlainLongText"`
 	WorkCenter                               *int     `json:"WorkCenter"`
-	CapacityCategoryCode                     *string  `json:"CapacityCategoryCode"`
+	CapacityCategory                     	 *string  `json:"CapacityCategory"`
 	OperationCostingRelevancyType            *string  `json:"OperationCostingRelevancyType"`
 	OperationSetupType                       *string  `json:"OperationSetupType"`
 	OperationSetupGroupCategory              *string  `json:"OperationSetupGroupCategory"`
