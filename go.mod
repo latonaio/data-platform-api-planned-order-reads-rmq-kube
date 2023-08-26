@@ -1,4 +1,4 @@
-module data-platform-api-production-order-reads-rmq-kube
+module data-platform-api-planned-order-reads-rmq-kube
 
 go 1.20
 
