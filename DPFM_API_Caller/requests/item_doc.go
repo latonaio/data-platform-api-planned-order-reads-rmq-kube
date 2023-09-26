@@ -1,8 +1,8 @@
 package requests
 
 type ItemDoc struct {
-	ProductionOrder          int     `json:"ProductionOrder"`
-	ProductionOrderItem      int     `json:"ProductionOrderItem"`
+	PlannedOrder             int     `json:"PlannedOrder"`
+	PlannedOrderItem         int     `json:"PlannedOrderItem"`
 	DocType                  string  `json:"DocType"`
 	DocVersionID             int     `json:"DocVersionID"`
 	DocID                    string  `json:"DocID"`

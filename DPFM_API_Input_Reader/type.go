@@ -162,6 +162,17 @@ type Header struct {
 	Address                                         []Address `json:"Address"`
 }
 
+type HeaderDoc struct {
+	PlannedOrder             int     `json:"PlannedOrder"`
+	DocType                  string  `json:"DocType"`
+	DocVersionID             int     `json:"DocVersionID"`
+	DocID                    string  `json:"DocID"`
+	FileExtension            *string `json:"FileExtension"`
+	FileName                 *string `json:"FileName"`
+	FilePath                 *string `json:"FilePath"`
+	DocIssuerBusinessPartner *int    `json:"DocIssuerBusinessPartner"`
+}
+
 type Item struct {
 	PlannedOrder                             int                      `json:"PlannedOrder"`
 	PlannedOrderItem                         int                      `json:"PlannedOrderItem"`
@@ -232,6 +243,18 @@ type Item struct {
 	ItemComponent                            []ItemComponent          `json:"ItemComponent"`
 	ItemOperation                            []ItemOperation          `json:"ItemOperation"`
 	ItemOperationComponent                   []ItemOperationComponent `json:"ItemOperationComponent"`
+}
+
+type ItemDoc struct {
+	PlannedOrder             int     `json:"PlannedOrder"`
+	PlannedOrderItem         int     `json:"PlannedOrderItem"`
+	DocType                  string  `json:"DocType"`
+	DocVersionID             int     `json:"DocVersionID"`
+	DocID                    string  `json:"DocID"`
+	FileExtension            *string `json:"FileExtension"`
+	FileName                 *string `json:"FileName"`
+	FilePath                 *string `json:"FilePath"`
+	DocIssuerBusinessPartner *int    `json:"DocIssuerBusinessPartner"`
 }
 
 type ItemComponent struct {
@@ -327,7 +350,7 @@ type ItemOperation struct {
 	ResponsiblePlannerGroup                  *string  `json:"ResponsiblePlannerGroup"`
 	PlainLongText                            *string  `json:"PlainLongText"`
 	WorkCenter                               *int     `json:"WorkCenter"`
-	CapacityCategory                     	 *string  `json:"CapacityCategory"`
+	CapacityCategory                         *string  `json:"CapacityCategory"`
 	OperationCostingRelevancyType            *string  `json:"OperationCostingRelevancyType"`
 	OperationSetupType                       *string  `json:"OperationSetupType"`
 	OperationSetupGroupCategory              *string  `json:"OperationSetupGroupCategory"`

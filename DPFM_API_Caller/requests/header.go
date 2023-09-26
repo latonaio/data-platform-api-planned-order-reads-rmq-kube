@@ -1,7 +1,7 @@
 package requests
 
 type Header struct {
-	PannedOrder                                     int      `json:"PlannedOrder"`
+	PlannedOrder                                    int      `json:"PlannedOrder"`
 	SupplyChainRelationshipID                       int      `json:"SupplyChainRelationshipID"`
 	SupplyChainRelationshipDeliveryID               int      `json:"SupplyChainRelationshipDeliveryID"`
 	SupplyChainRelationshipDeliveryPlantID          int      `json:"SupplyChainRelationshipDeliveryPlantID"`
